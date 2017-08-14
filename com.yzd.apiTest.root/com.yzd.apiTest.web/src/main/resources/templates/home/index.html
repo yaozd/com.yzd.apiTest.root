@@ -49,11 +49,11 @@
                         <input type="text" autocomplete="off" placeholder="请求地址，以   http://  开头，不支持本地接口" value="" id="url" name="url" class="showBox form-control">
                     </div>
                     <div style="padding-left: 0px; padding-right: 0px;" class="col-sm-4">
-                        <input type="button" id="submit" value="发送请求" class="btn btn-success">
+                        <input type="button" id="submitBtn" value="发送请求" class="btn btn-success">
                         <input type="button" onclick="return $('html,body').stop().animate({scrollTop:$('#json_input').offset().top-65},500),!1;	" value="查看返回结果" id="copyCode" class="btn btn-info copyCode" data-clipboard-target="json_input">
-                        <input type="checkbox" id="openParameter" checked="checked" onclick="openInput('.params',this);">
+                        <input type="checkbox" id="openParameter" checked="checked">
                         <label for="openParameter">请求参数</label>
-                        <input type="checkbox" id="openHeader" checked="checked" onclick="openInput('.header',this);">
+                        <input type="checkbox" id="openHeader" checked="checked">
                         <label for="openHeader">请求Header</label>
                     </div>
                 </div>
@@ -149,7 +149,9 @@
                     </div>
                     <div class="col-sm-8">
                         <label for="description">Response Body （返回值是JSON，会自动格式化）</label>
-                        <div class="linedwrap"><div class="lines" style="width: 50px; height: 349px;"><div class="codelines" style="margin-top: 0px;"><div class="lineno">1</div><div class="lineno">2</div><div class="lineno">3</div><div class="lineno">4</div><div class="lineno">5</div><div class="lineno">6</div><div class="lineno">7</div><div class="lineno">8</div><div class="lineno">9</div><div class="lineno">10</div><div class="lineno">11</div><div class="lineno">12</div><div class="lineno">13</div><div class="lineno">14</div><div class="lineno">15</div><div class="lineno">16</div><div class="lineno">17</div><div class="lineno">18</div></div></div><textarea placeholder="Response Body info" id="json_input" style="resize: both; width: 684px; max-width: 676px;" rows="6" wrap="off" spellcheck="false" class="json_input"></textarea></div>
+                        <div class="linedwrap">
+                            <textarea placeholder="Response Body info" id="json_input" style="resize: both; width: 684px; max-width: 676px;" rows="6" wrap="off" spellcheck="false" class="json_input"></textarea>
+                        </div>
                     </div>
                 </div>
             </form>

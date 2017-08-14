@@ -23,7 +23,12 @@ public class RequestForm {
         HttpRequestBo bo=new HttpRequestBo();
         bo.setUrl(form.getUrl());
         bo.setType(form.getType());
-        bo.setCharset(form.getCharset());
+        bo.setKeys(form.getKeys());
+        bo.setValues(form.getValues());
+        bo.setHeadKeys(form.getHeadKeys());
+        bo.setHeadValues(form.getHeadValues());
+        bo.setButchParameter(form.getButchParameter());
+        bo.setCookie(form.getCookie());
         return bo;
     }
 }

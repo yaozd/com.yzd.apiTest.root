@@ -6,7 +6,7 @@ $(function () {
 });
 //region
 function submitFun() {
-    $("#submit").click(function () {
+    $("#submitBtn").click(function () {
         var errorInfoObj=$("#_error_info");
         errorInfoObj.hide();
         $("#head_info").val("");

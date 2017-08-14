@@ -10,6 +10,8 @@ public class HttpRequestBo {
     private String type;
     private String url;
     private String charset;
+    private String butchParameter;
+    private String cookie;
     private String[] keys;
     private String[] values;
     private String[] headKeys;

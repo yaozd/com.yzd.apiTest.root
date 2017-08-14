@@ -78,12 +78,19 @@ public class HttpManager {
                     method.setQueryString(queryString);
                 }
             }
+            if(StringUtils.isNotBlank(bo.getButchParameter())){
+                method.setQueryString(bo.getButchParameter());
+            }
             //设置请求头 和上面方法一致，如果一样，那么就覆盖。
             String[] headKeys = bo.getHeadKeys(),headValues = bo.getHeadValues();
             if(StringUtil2.isNotEmpty(headKeys)&&StringUtil2.isNotEmpty(headValues)){
                 for (int i = 0;i < headKeys.length; i++) {
                     method.setRequestHeader(headKeys[i], headValues[i]);
                 }
+            }
+            //设置请求cookie
+            if(StringUtils.isNotBlank(bo.getCookie())) {
+                method.setRequestHeader("cookie", bo.getCookie());
             }
             int status = client.executeMethod(method);
             map.put("status",status);
