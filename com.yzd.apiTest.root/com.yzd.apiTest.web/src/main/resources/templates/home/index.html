@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-cn">
+    <meta charset="UTF-8">
+    <title>在线HTTP接口测试 - HTTP GET/POST模拟请求测试工具</title>
+    <link href="/css/base.css" rel="stylesheet">
+    <link href="/css/layer.css" rel="stylesheet">
+    <link href="/css/b.css" rel="stylesheet">
+    <link href="/css/jl.css" rel="stylesheet">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/script/index.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="toolsTab clearfix" style="padding-bottom: 15px; margin-top: 0px;">
+            <ul class="nav nav-tabs _load">
+                <li class="active"><a href="#">HTTP模拟请求</a></li>
+                <li class=" "><a href="/">点击录入接口</a></li>
+            </ul>
+            <div class="clear"></div>
+        </div>
+        <div class="col-md-12">
+            <h2>在线<a href="http://www.sojson.com/tag_http.html" target="_blank">HTTP</a> POST/GET ... 接口测试工具</h2>
+            <hr>
+            <form id="formId" action="/httpRequest" method="post" enctype="multipart/form-data">
+                <label>支持的请求协议有：<code>Post</code>、<code>GetDelete</code>、<code>Put</code>、<code>Trace</code>、<code>Head</code>、<code>Options</code>请求。本工具支持本地（http://localhost）接口测试</label>
+                <div style="margin-bottom: 50px;" class="form-group">
+                    <div style="padding-left: 0px; padding-right: 0px;" class="col-sm-1">
+                        <select id="type" name="type" class="form-control">
+                            <option value="Post">Post</option>
+                            <option value="Get">Get</option>
+                            <option value="Delete">Delete</option>
+                            <option value="Put">Put</option>
+                            <option value="Trace">Trace</option>
+                            <option value="Head">Head</option>
+                            <option value="Options">Options</option>
+                        </select>
+                    </div>
+                    <div style="padding-left: 0px; padding-right: 0px;" class="col-sm-1">
+                        <select id="charset" name="charset" class="form-control">
+                            <option value="UTF-8">UTF-8</option>
+                            <option value="GBK">GBK</option>
+                            <option value="GB2312">GB2312</option>
+                            <option value="GB18030">GB18030</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" autocomplete="off" placeholder="请求地址，以   http://  开头，不支持本地接口" value="" id="url" name="url" class="showBox form-control">
+                    </div>
+                    <div style="padding-left: 0px; padding-right: 0px;" class="col-sm-4">
+                        <input type="button" id="submit" value="发送请求" class="btn btn-success">
+                        <input type="button" onclick="return $('html,body').stop().animate({scrollTop:$('#json_input').offset().top-65},500),!1;	" value="查看返回结果" id="copyCode" class="btn btn-info copyCode" data-clipboard-target="json_input">
+                        <input type="checkbox" id="openParameter" checked="checked" onclick="openInput('.params',this);">
+                        <label for="openParameter">请求参数</label>
+                        <input type="checkbox" id="openHeader" checked="checked" onclick="openInput('.header',this);">
+                        <label for="openHeader">请求Header</label>
+                    </div>
+                </div>
+                <label id="_error_info" class="none" style="display: none;color:red;">
+                </label>
+                <br>
+                <label id="_info" class="none" style="display: inline-block;">
+                    <code style="display: inline;">备注：</code>本工具内部开发测试使用。
+                   </label>
+                <br>
+                <div style="margin-bottom: 20px;" id="single_parameter" class="form-group params">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th style="width: 30%;">参数名称</th>
+                            <th style="width: 70%;">参数值</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td colspan="2">
+                                <button type="button" k="keys" v="values" onclick="add_url_parameter(this,'key');" class="btn btn-success addParamenter">添加参数</button>
+                                <button type="button" k="keys" v="values" onclick="parameter_exc('#single_parameter','#butch_parameter')" class="btn btn-info">批量添加（JSON参数）</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div style="margin-bottom: 20px;display:none;" id="butch_parameter" class="form-group header">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th style="width: 30%;">参数支持JSON格式，以及GET参数请求方式</th>
+                            <th style="width: 70%;"><button type="button" onclick="parameter_exc('#butch_parameter','#single_parameter')" class="btn btn-success"><i class="glyphicon glyphicon-share-alt"></i>返回键值对添加请求参数</button></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td colspan="2">
+                                <textarea class="form-control" rows="3" name="butchParameter" maxlength="5000" placeholder="这里可以输入 a=1&amp;b=2类型参数(不要问号)，或者{&quot;a&quot;:1,&quot;b&quot;:2} ，为了防止恶意提交，长度为1000。"></textarea>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div style="margin-bottom: 20px;" class="form-group header">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th style="width: 30%;">Header名称</th>
+                            <th style="width: 70%;">Header值</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td colspan="2">
+                                <button type="button" k="headKeys" v="headValues" onclick="add_url_parameter(this,'head');" class="btn btn-success addHeadParamenter">添加参数</button>
+                                <button type="button" onclick="return $('html,body').stop().animate({scrollTop:$('#explain').offset().top-65},500),!1;" class="btn btn-default">Header参数解释？</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div style="margin-bottom: 50px;" class="form-group header">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th style="width: 30%;">Cookie（没有就不用填入）</th>
+                            <th style="width: 70%;"><button type="button" onclick="addCookieFun('#_cookie')" class="btn btn-success">添加Cookie</button></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr id="_cookie" style="display:none;">
+                            <td colspan="2">
+                                <textarea class="form-control" rows="3" name="cookie" placeholder="这里是输入Cookie，可以不输入。"></textarea>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div class="form-group">
+                    <div id="_respond_info">响应时间(Time)：响应状态(status)：HOST:</div>
+                </div>
+                <div class="form-group">
+                    <div style="padding-left: 0px; padding-right: 0px;" class="col-sm-4">
+                        <label for="description">Response Header</label>
+                        <textarea placeholder="请求返回的Header信息。" id="head_info" calss="form-control" style="width: 100%;height: 305px;border: 1px solid #ccc;border-radius: 4px;" wrap="off"></textarea>
+                        <p class="help-block"><a target="_blank" href="javascript:void(0);">HTTP状态查询(200 - 服务器成功返回网页 404 - 请求的网页不存在 503 - 服务不可用)</a></p>
+                    </div>
+                    <div class="col-sm-8">
+                        <label for="description">Response Body （返回值是JSON，会自动格式化）</label>
+                        <div class="linedwrap"><div class="lines" style="width: 50px; height: 349px;"><div class="codelines" style="margin-top: 0px;"><div class="lineno">1</div><div class="lineno">2</div><div class="lineno">3</div><div class="lineno">4</div><div class="lineno">5</div><div class="lineno">6</div><div class="lineno">7</div><div class="lineno">8</div><div class="lineno">9</div><div class="lineno">10</div><div class="lineno">11</div><div class="lineno">12</div><div class="lineno">13</div><div class="lineno">14</div><div class="lineno">15</div><div class="lineno">16</div><div class="lineno">17</div><div class="lineno">18</div></div></div><textarea placeholder="Response Body info" id="json_input" style="resize: both; width: 684px; max-width: 676px;" rows="6" wrap="off" spellcheck="false" class="json_input"></textarea></div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div class="row">
+        <h4 id="explain">Requests Header | Http Header</h4>
+        <table class="table table-bordered content-table"><thead><tr><th>Header</th><th width="35%">解释</th><th width="40%">示例</th></tr></thead><tbody><tr><td>Accept</td><td>指定客户端能够接收的内容类型</td><td>Accept:text/plain,text/html</td></tr><tr><td>Accept-Charset</td><td>浏览器可以接受的字符编码集。</td><td>Accept-Charset:iso-8859-5</td></tr><tr><td>Accept-Encoding</td><td>指定浏览器可以支持的web服务器返回内容压缩编码类型。</td><td>Accept-Encoding:compress,gzip</td></tr><tr><td>Accept-Language</td><td>浏览器可接受的语言</td><td>Accept-Language:en,zh</td></tr><tr><td>Accept-Ranges</td><td>可以请求网页实体的一个或者多个子范围字段</td><td>Accept-Ranges:bytes</td></tr><tr><td>Authorization</td><td>HTTP授权的授权证书</td><td>Authorization:Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</td></tr><tr><td>Cache-Control</td><td>指定请求和响应遵循的缓存机制</td><td>Cache-Control:no-cache</td></tr><tr><td>Connection</td><td>表示是否需要持久连接。（HTTP 1.1默认进行持久连接）</td><td>Connection:close</td></tr><tr><td>Cookie</td><td>HTTP请求发送时，会把保存在该请求域名下的所有cookie值一起发送给web服务器。</td><td>Cookie:$Version=1;Skin=new;</td></tr><tr><td>Content-Length</td><td>请求的内容长度</td><td>Content-Length:348</td></tr><tr><td>Content-Type</td><td>请求的与实体对应的MIME信息</td><td>Content-Type:application/x-www-form-urlencoded</td></tr><tr><td>Date</td><td>请求发送的日期和时间</td><td>Date:Tue,15 Nov&nbsp;2010 08:12:31 GMT</td></tr><tr><td>Expect</td><td>请求的特定的服务器行为</td><td>Expect:100-continue</td></tr><tr><td>From</td><td>发出请求的用户的Email</td><td>From:user@email.com</td></tr><tr><td>Host</td><td>指定请求的服务器的域名和端口号</td><td>Host:www.zcmhi.com</td></tr><tr><td>If-Match</td><td>只有请求内容与实体相匹配才有效</td><td>If-Match:“737060cd8c284d8af7ad3082f209582d”</td></tr><tr><td>If-Modified-Since</td><td>如果请求的部分在指定时间之后被修改则请求成功，未被修改则返回304代码</td><td>If-Modified-Since:Sat,29 Oct 2010 19:43:31 GMT</td></tr><tr><td>If-None-Match</td><td>如果内容未改变返回304代码，参数为服务器先前发送的Etag，与服务器回应的Etag比较判断是否改变</td><td>If-None-Match:“737060cd8c284d8af7ad3082f209582d”</td></tr><tr><td>If-Range</td><td>如果实体未改变，服务器发送客户端丢失的部分，否则发送整个实体。参数也为Etag</td><td>If-Range:“737060cd8c284d8af7ad3082f209582d”</td></tr><tr><td>If-Unmodified-Since</td><td>只在实体在指定时间之后未被修改才请求成功</td><td>If-Unmodified-Since:Sat,29 Oct 2010 19:43:31 GMT</td></tr><tr><td>Max-Forwards</td><td>限制信息通过代理和网关传送的时间</td><td>Max-Forwards:10</td></tr><tr><td>Pragma</td><td>用来包含实现特定的指令</td><td>Pragma:no-cache</td></tr><tr><td>Proxy-Authorization</td><td>连接到代理的授权证书</td><td>Proxy-Authorization:Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</td></tr><tr><td>Range</td><td>只请求实体的一部分，指定范围</td><td>Range:bytes=500-999</td></tr><tr><td>Referer</td><td>先前网页的地址，当前请求网页紧随其后,即来路</td><td>Referer:http:</td></tr><tr><td>TE</td><td>客户端愿意接受的传输编码，并通知服务器接受接受尾加头信息</td><td>TE:trailers,deflate;q=0.5</td></tr><tr><td>Upgrade</td><td>向服务器指定某种传输协议以便服务器进行转换（如果支持）</td><td>Upgrade:HTTP/2.0,SHTTP/1.3,IRC/6.9,RTA/x11</td></tr><tr><td>User-Agent</td><td>User-Agent的内容包含发出请求的用户信息</td><td>User-Agent:Mozilla/5.0(Linux;X11)</td></tr><tr><td>Via</td><td>通知中间网关或代理服务器地址，通信协议</td><td>Via:1.0 fred,1.1 nowhere.com(Apache/1.1)</td></tr><tr><td>Warning</td><td>关于消息实体的警告信息</td><td>Warn:199 Miscellaneous warning</td></tr></tbody></table>
+    </div>
+</div>
+<script type="text/template" id="key_template">
+    <tr class="key"><td><input k="" value="" name="keys" class="form-control" type="text" maxlength="100" placeholder="参数名称"></td><td><input value="" v="" name="values" class="form-control" type="text" maxlength="5000" style="width: 70%;float: left;" placeholder="参数数值"><button type="button" onclick="del(this);" class="btn btn-primary btn-sm del_btn">删除参数</button></td></tr>
+</script>
+<script type="text/template" id="head_template">
+    <tr class="head"><td><input k="" value="" name="headKeys" class="form-control" type="text" maxlength="100" placeholder="参数名称"></td><td><input value="" v="" name="headValues" class="form-control" type="text" maxlength="5000" style="width: 70%;float: left;" placeholder="参数数值"><button type="button" onclick="del(this);" class="btn btn-primary btn-sm del_btn">删除参数</button></td></tr>
+</script>
+</body>
+</html>
